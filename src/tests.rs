@@ -116,6 +116,10 @@ fn test_the_gauntlet() {
 	)
 	";
 
-	parse(object)
+	let object = parse(object)
+		.unwrap();
+	
+	let string = object.to_string();
+	parse(&string)
 		.unwrap();
 }
