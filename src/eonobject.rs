@@ -1,8 +1,10 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display};
 use super::EonValue;
 
 #[derive(Debug, PartialEq)]
-pub struct EonObject(pub(crate) HashMap<String, EonValue>);
+pub struct EonObject(
+	pub(crate) HashMap<String, EonValue>
+);
 
 impl EonObject {
 	pub fn new() -> Self {
@@ -22,4 +24,18 @@ impl EonObject {
 	pub fn remove(&mut self, key: &str) -> Option<EonValue> {
 		self.0.remove(key)
 	}
+}
+
+impl Display for EonObject {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut values = Vec::with_capacity(self.0.len());
+		for (key, value) in &self.0 {
+			values.push(
+				format!("{}: {}", key, value)
+			);
+		}
+
+		let interior = values.join(", ");
+		write!(f, "({})", interior)
+    }
 }
