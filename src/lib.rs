@@ -1,4 +1,6 @@
 mod eonvalue;
+use std::{path::Path, fs};
+
 pub use eonvalue::EonValue;
 
 mod eonobject;
@@ -13,6 +15,18 @@ mod parser;
 mod tests;
 
 pub type Result<T> = std::result::Result<T, EonError>;
+
+pub fn load<P: AsRef<Path>>(path: P) -> Result<EonValue> {
+	let source = match fs::read_to_string(path) {
+		Ok(v) => v,
+		Err(e) => return Err(EonError {
+			message: e.to_string(),
+			kind: EonErrorKind::IoError(e),
+		}),
+	};
+
+	parse(&source)
+}
 
 pub fn parse(source: &str) -> Result<EonValue> {
 	let source = source.trim();
